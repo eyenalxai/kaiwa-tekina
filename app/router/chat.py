@@ -49,6 +49,7 @@ async def text_handler(  # noqa: WPS211 Found too many arguments
     )
 
     await async_session.commit()
+
     try:
         await message.reply(text=answer.content)
     except TelegramBadRequest as exception:
