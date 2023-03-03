@@ -5,7 +5,14 @@ description = ""
 authors = [
     {name = "Sax Dhiut", email = "mail@iyxeyl.me"},
 ]
-dependencies = []
+dependencies = [
+    "pydantic>=1.10.5",
+    "aiogram==3.0.0b7",
+    "httpx>=0.23.3",
+    "SQLAlchemy>=2.0.4",
+    "asyncpg>=0.27.0",
+    "greenlet>=2.0.2",
+]
 requires-python = ">=3.11"
 license = {text = "MIT"}
 
@@ -20,6 +27,7 @@ dev = [
     "pre-commit>=3.1.1",
     "vulture>=2.7",
     "pytest>=7.2.1",
+    "alembic>=1.9.4",
 ]
 
 

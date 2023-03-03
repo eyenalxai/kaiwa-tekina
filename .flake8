@@ -6,8 +6,10 @@ ignore = B008 Do not perform function calls in argument defaults
          D103 Missing docstring in public function
          D104 Missing docstring in public package
          D106 Missing docstring in public nested class
+         Q000 Double quotes found but single quotes preferred
          S104 Possible binding to all interfaces
          S311 Standard pseudo-random generators are not suitable for security/cryptographic purposes.
+         WPS110 Found wrong variable name
          WPS303 Found underscored number
          WPS306 Found class without a base class
          WPS348 Found a line that starts with a dot
