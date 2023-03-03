@@ -1,10 +1,12 @@
 from collections.abc import Callable
 
 from aiogram import Router
+from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import Message
 from cryptography.fernet import Fernet
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.config.log import logger
 from app.model.models import UserModel
 from app.model.schema.open_ai import ChatGPTMessage, Role
 from app.util.query.message import get_last_messages_by_user, save_message
@@ -60,4 +62,14 @@ async def text_handler(  # noqa: WPS211 Found too many arguments
     user.tokens_used += tokens_used
 
     await async_session.commit()
-    await message.reply(text=answer.content)
+    try:
+        await message.reply(text=answer.content)
+    except TelegramBadRequest as e:
+        logger.error(e.message)
+        reply_error_text = (
+            "Something went wrong, please try asking in a different way"
+            "\n\nHere is an error that I got:\n<i>{error_message}</i>".format(
+                error_message=e.message,
+            )
+        )
+        await message.reply(text=reply_error_text)
