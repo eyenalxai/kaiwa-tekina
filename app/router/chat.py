@@ -53,7 +53,7 @@ async def text_handler(  # noqa: WPS211 Found too many arguments
     await save_message(
         async_session=async_session,
         role=Role.ASSISTANT,
-        content=fernet.encrypt(answer.content.encode()),
+        content=fernet.encrypt(answer.content.strip().encode()),
         user=user,
     )
 
