@@ -12,7 +12,7 @@ COPY ./pdm.lock /code/pdm.lock
 RUN pdm install
 
 COPY ./app /code/app
-COPY manager_bot.py /code/manager_bot.py
+COPY main.py /code/main.py
 
 ENV ADMIN_USER_IDS ${ADMIN_USER_IDS}
 ENV TELEGRAM_TOKEN ${TELEGRAM_TOKEN}
