@@ -1,16 +1,15 @@
 """initial
 
-Revision ID: 5d4fa87722a3
+Revision ID: 50a912ddb356
 Revises: 
-Create Date: 2023-03-03 18:20:42.917703
+Create Date: 2023-03-03 20:00:21.384587
 
 """
-from alembic import op
 import sqlalchemy as sa
-
+from alembic import op
 
 # revision identifiers, used by Alembic.
-revision = '5d4fa87722a3'
+revision = '50a912ddb356'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,14 +20,18 @@ def upgrade() -> None:
     op.create_table('user',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('telegram_id', sa.String(length=512), nullable=False),
+    sa.Column('telegram_id', sa.BIGINT(), nullable=False),
+    sa.Column('username', sa.String(length=32), nullable=True),
+    sa.Column('full_name', sa.String(length=128), nullable=True),
+    sa.Column('is_allowed', sa.Boolean(), nullable=False),
+    sa.Column('tokens_used', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('telegram_id')
     )
     op.create_table('message',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('created_at', sa.TIMESTAMP(timezone=True), server_default=sa.text('now()'), nullable=False),
-    sa.Column('text', sa.String(length=4096), nullable=False),
+    sa.Column('content', sa.String(length=4096), nullable=False),
     sa.Column('role', sa.Enum('USER', 'ASSISTANT', 'SYSTEM', name='role'), nullable=False),
     sa.Column('user_id', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),

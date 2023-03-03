@@ -3,7 +3,7 @@ from enum import Enum
 from app.config.pydantic import Immutable
 
 
-class Role(str, Enum):
+class Role(str, Enum):  # noqa: WPS600 Found subclassing a builtin: str
     USER = "user"
     ASSISTANT = "assistant"
     SYSTEM = "system"
@@ -19,5 +19,10 @@ class Choice(Immutable):
     message: ChatGPTMessage
 
 
+class Usage(Immutable):
+    total_tokens: int
+
+
 class ChatCompletion(Immutable):
     choices: list[Choice]
+    usage: Usage

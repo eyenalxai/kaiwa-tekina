@@ -9,7 +9,7 @@ def first_choice(chat_completion: ChatCompletion) -> ChatGPTMessage:
     return min(chat_completion.choices, key=lambda choice: choice.index).message
 
 
-def chat_gpt_wrapper() -> Callable[[list[ChatGPTMessage]], ChatGPTMessage]:
+def chat_gpt_wrapper() -> Callable[[list[ChatGPTMessage]], tuple[int, ChatGPTMessage]]:
     url = shared_settings.openai_chat_api_url
     headers = {
         "Content-Type": "application/json",
@@ -21,7 +21,7 @@ def chat_gpt_wrapper() -> Callable[[list[ChatGPTMessage]], ChatGPTMessage]:
         "model": "gpt-3.5-turbo",
     }
 
-    def chat_prompt(messages: list[ChatGPTMessage]) -> ChatGPTMessage:
+    def chat_prompt(messages: list[ChatGPTMessage]) -> tuple[int, ChatGPTMessage]:
         response = send_openai_request(
             url=url,
             headers=headers,
@@ -31,6 +31,9 @@ def chat_gpt_wrapper() -> Callable[[list[ChatGPTMessage]], ChatGPTMessage]:
 
         chat_completion = ChatCompletion(**response.json())
 
-        return first_choice(chat_completion=chat_completion)
+        return (
+            chat_completion.usage.total_tokens,
+            first_choice(chat_completion=chat_completion),
+        )
 
     return chat_prompt

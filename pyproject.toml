@@ -38,7 +38,7 @@ start = "python main.py"
 py-modules = []
 
 [tool.mypy]
-exclude = [".git", ".idea", ".mypy_cache", ".venv", ".vscode", ".migrations", "alembic"]
+exclude = [".git", ".idea", ".mypy_cache", ".venv", ".vscode", "migrations", "alembic"]
 pretty = true
 check_untyped_defs = true
 disallow_incomplete_defs = true
@@ -51,11 +51,12 @@ warn_unreachable = true
 profile = "black"
 
 [tool.black]
-exclude = [".git", ".idea", ".mypy_cache", ".venv", ".vscode", ".migrations", "alembic"]
+exclude = [".git", ".idea", ".mypy_cache", ".venv", ".vscode", "migrations", "alembic"]
 line-length = 88
 
 [tool.vulture]
-exclude = [".git", ".idea", ".mypy_cache", ".venv", ".vscode", ".migrations", "alembic"]
-
+exclude = [".git", ".idea", ".mypy_cache", ".venv", ".vscode", "migrations", "alembic"]
+ignore_names = ["_", "Config", "frozen", "created_at", "cls"]
+ignore_decorators = ["@start_router.*", "@chat_router.*", "@management_router.*", "@validator"]
 
 

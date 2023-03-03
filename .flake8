@@ -10,13 +10,15 @@ ignore = B008 Do not perform function calls in argument defaults
          S104 Possible binding to all interfaces
          S311 Standard pseudo-random generators are not suitable for security/cryptographic purposes.
          WPS110 Found wrong variable name
+         WPS115 Found upper-case constant in a class
          WPS303 Found underscored number
          WPS306 Found class without a base class
          WPS348 Found a line that starts with a dot
+         WPS430 Found nested function: chat_prompt
 max-line-length = 88
 
 # Exclude some directories from flake8
 # __init__.py files are excluded by default
-exclude = .git, .idea, .mypy_cache, .venv, .vscode, .migrations, alembic, tests
+exclude = .git, .idea, .mypy_cache, .venv, .vscode, migrations, alembic, tests
 
 nested-classes-whitelist = Config, Password, Username, CategoryName

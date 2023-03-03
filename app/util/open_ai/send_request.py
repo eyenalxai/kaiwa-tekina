@@ -24,23 +24,25 @@ def send_openai_request(
         response.raise_for_status()
     except HTTPStatusError as http_status_error:
         logger.error(
-            "OpenAI API error: %s\n%s\n%s",
-            http_status_error,
-            (
-                http_status_error.response
-                if http_status_error.response
-                else "No response"
-            ),
-            (
-                http_status_error.response.text
-                if http_status_error.response
-                else "No response text"
+            "OpenAI API error: {http_status_error}\n{response}\n{text}".format(
+                http_status_error=http_status_error,
+                response=(
+                    http_status_error.response
+                    if http_status_error.response
+                    else "No response"
+                ),
+                text=(
+                    http_status_error.response.text
+                    if http_status_error.response
+                    else "No response text"
+                ),
             ),
         )
+
         raise
     except Exception as exception:
         logger.error(
-            "Error: %s", exception  # noqa:  WPS323 Found `%` string formatting
+            "Error: {exception}".format(exception=exception),
         )
         raise
 

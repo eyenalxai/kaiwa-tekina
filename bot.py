@@ -1,6 +1,6 @@
 from aiogram import Bot
 
-from app.util.initialize import initialize_dispatcher
+from app.util.dispatcher.initialize import initialize_dispatcher
 from app.util.lifecycle.start import start_bot
 from app.util.settings import shared_settings
 

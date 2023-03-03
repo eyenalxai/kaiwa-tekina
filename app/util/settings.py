@@ -18,6 +18,9 @@ class SharedSettings(BaseSettings):
     openai_token: str = Field(..., env="OPENAI_TOKEN")
     openai_chat_api_url = "https://api.openai.com/v1/chat/completions"
 
+    # Example: [1234567890, 1234567890, ...] # noqa: E800 Found commented out code
+    admin_user_ids: list[int] = Field(..., env="ADMIN_USER_IDS")
+
     @property
     def async_database_url(self: "SharedSettings") -> str:
         return self.database_url.replace(
