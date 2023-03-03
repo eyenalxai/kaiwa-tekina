@@ -9,7 +9,7 @@ from app.util.query.user import (
     get_users_with_most_tokens_used,
     toggle_allowed_user_by_telegram_id,
 )
-from app.util.stuff import parse_telegram_id
+from app.util.stuff import parse_telegram_id, username_or_full_name
 
 management_router = Router(name="management router")
 
@@ -43,16 +43,6 @@ async def command_toggle_handler(
     )
 
 
-def username_or_full_name(user: User) -> str:
-    if user.username:
-        return "@{username}".format(username=user.username)
-
-    if user.full_name:
-        return "{full_name}".format(full_name=user.full_name)
-
-    return str(user.telegram_id)
-
-
 @management_router.message(Command("list"))
 async def command_list_handler(
     message: Message,
@@ -84,7 +74,7 @@ async def command_list_handler(
     message_text = "Top 10 users by tokens used:\n\n{users_list}".format(
         users_list="\n".join(
             "{username}: ${money}".format(
-                username=username_or_full_name(user_usage.user),
+                username=username_or_full_name(user=user_usage.user),
                 money=user_usage.money,
             )
             for user_usage in users
