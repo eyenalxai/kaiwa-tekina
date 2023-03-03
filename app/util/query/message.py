@@ -5,6 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.model.models import MessageModel, UserModel
 from app.model.schema.open_ai import ChatGPTMessage
+from app.util.settings import shared_settings
 
 
 async def save_message(
@@ -21,7 +22,7 @@ async def save_message(
     async_session.add(message)
 
 
-async def get_last_one_hundred_messages_by_user(
+async def get_last_messages_by_user(
     async_session: AsyncSession,
     user: UserModel,
 ) -> Sequence[MessageModel]:
@@ -29,7 +30,7 @@ async def get_last_one_hundred_messages_by_user(
         select(MessageModel)
         .where(MessageModel.user == user)
         .order_by(MessageModel.created_at.desc())
-        .limit(100)
+        .limit(shared_settings.messages_limit)
     )
 
     result = await async_session.execute(query)

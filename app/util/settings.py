@@ -21,6 +21,8 @@ class SharedSettings(BaseSettings):
     # Example: [1234567890, 1234567890, ...] # noqa: E800 Found commented out code
     admin_user_ids: list[int] = Field(..., env="ADMIN_USER_IDS")
 
+    messages_limit: int = Field(env="MESSAGES_LIMIT", default=10)
+
     @property
     def async_database_url(self: "SharedSettings") -> str:
         return self.database_url.replace(

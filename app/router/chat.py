@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.model.models import UserModel
 from app.model.schema.open_ai import ChatGPTMessage, Role
-from app.util.query.message import get_last_one_hundred_messages_by_user, save_message
+from app.util.query.message import get_last_messages_by_user, save_message
 
 chat_router = Router(name="chat router")
 
@@ -19,7 +19,7 @@ async def text_handler(
     chat_prompt: Callable[[list[ChatGPTMessage]], tuple[int, ChatGPTMessage]],
     message_text: str,
 ) -> None:
-    previous_messages_models = await get_last_one_hundred_messages_by_user(
+    previous_messages_models = await get_last_messages_by_user(
         async_session=async_session,
         user=user,
     )
