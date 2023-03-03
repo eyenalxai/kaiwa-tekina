@@ -28,14 +28,14 @@ class UserModel(Base):
     username: Mapped[str | None] = mapped_column(
         String(32),  # noqa: WPS432 Found magic number
     )
-    full_name: Mapped[str | None] = mapped_column(
+    full_name: Mapped[str] = mapped_column(
         String(128),  # noqa: WPS432 Found magic number
+        nullable=False,
     )
 
     messages: Mapped[list["MessageModel"]] = relationship(back_populates="user")
 
     is_allowed: Mapped[bool] = mapped_column(Boolean, default=False)
-    tokens_used: Mapped[int] = mapped_column(Integer(), default=0)
 
 
 class MessageModel(Base):
@@ -50,6 +50,8 @@ class MessageModel(Base):
     # WPS432 Found magic number: 4096
     content: Mapped[bytes] = mapped_column(LargeBinary)  # noqa: WPS432
     role: Mapped[Role] = mapped_column(EnumType(Role, name="role"))
+
+    tokens_used: Mapped[int | None] = mapped_column(Integer(), nullable=True)
 
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))
     user: Mapped["UserModel"] = relationship(back_populates="messages")

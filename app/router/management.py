@@ -3,11 +3,11 @@ from aiogram.filters import Command
 from aiogram.types import Message
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.model.models import UserModel
+from app.model.schema.user import User, UserUsage
 from app.util.money import tokens_to_usd
 from app.util.query.user import (
-    toggle_allowed_user_by_telegram_id,
     get_users_with_most_tokens_used,
+    toggle_allowed_user_by_telegram_id,
 )
 from app.util.stuff import parse_telegram_id
 
@@ -43,7 +43,7 @@ async def command_toggle_handler(
     )
 
 
-def username_or_full_name(user: UserModel) -> str:
+def username_or_full_name(user: User) -> str:
     if user.username:
         return "@{username}".format(username=user.username)
 
@@ -58,28 +58,37 @@ async def command_list_handler(
     message: Message,
     async_session: AsyncSession,
 ) -> None:
-    users = await get_users_with_most_tokens_used(
+    user_models = await get_users_with_most_tokens_used(
         async_session=async_session,
         limit=10,
     )
-
-    users_list = "\n".join(
-        "{username}: ${money}".format(
-            username=username_or_full_name(user),
-            money=tokens_to_usd(tokens=user.tokens_used),
+    users = [
+        UserUsage(
+            user=User(
+                telegram_id=user_model.telegram_id,
+                username=user_model.username,
+                full_name=user_model.full_name,
+            ),
+            money=tokens_to_usd(tokens=tokens_used),
         )
-        for user in users
-        if tokens_to_usd(tokens=user.tokens_used) > 0
-    )
+        for user_model, tokens_used in user_models
+        if tokens_to_usd(tokens=tokens_used) > 0
+    ]
 
-    if not users_list:
+    if not users:
         await message.reply(
             text="No users found that spent more than $0",
         )
         return
 
     message_text = "Top 10 users by tokens used:\n\n{users_list}".format(
-        users_list=users_list,
+        users_list="\n".join(
+            "{username}: ${money}".format(
+                username=username_or_full_name(user_usage.user),
+                money=user_usage.money,
+            )
+            for user_usage in users
+        ),
     )
 
     await message.reply(text=message_text)

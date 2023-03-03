@@ -11,6 +11,7 @@ ignore = B008 Do not perform function calls in argument defaults
          S311 Standard pseudo-random generators are not suitable for security/cryptographic purposes.
          WPS110 Found wrong variable name
          WPS115 Found upper-case constant in a class
+          WPS221 Found line with high Jones Complexity
          WPS303 Found underscored number
          WPS306 Found class without a base class
          WPS348 Found a line that starts with a dot

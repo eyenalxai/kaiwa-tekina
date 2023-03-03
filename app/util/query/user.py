@@ -1,10 +1,11 @@
 from collections.abc import Sequence
 
 from aiogram.types import User as TelegramUser
-from sqlalchemy import select
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
 
-from app.model.models import UserModel
+from app.model.models import MessageModel, UserModel
 
 
 async def get_user_by_telegram_id(
@@ -68,9 +69,18 @@ async def toggle_allowed_user_by_telegram_id(
 async def get_users_with_most_tokens_used(
     async_session: AsyncSession,
     limit: int,
-) -> Sequence[UserModel]:
-    query = select(UserModel).order_by(UserModel.tokens_used.desc()).limit(limit)
+) -> Sequence[tuple[UserModel, int]]:
+    query = (
+        select(UserModel, func.sum(MessageModel.tokens_used).label("total_tokens_used"))
+        .join(MessageModel, UserModel.id == MessageModel.user_id)
+        .group_by(UserModel.id)
+        .order_by(func.sum(MessageModel.tokens_used).desc())
+        .limit(limit)
+        .options(
+            selectinload(UserModel.messages),
+        )
+    )
 
     result = await async_session.execute(query)
 
-    return result.scalars().all()
+    return result.all()  # type: ignore

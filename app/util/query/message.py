@@ -13,11 +13,13 @@ async def save_message(
     role: Role,
     content: bytes,
     user: UserModel,
+    tokens_used: int | None,
 ) -> None:
     message = MessageModel(
         role=role,
         content=content,
         user=user,
+        tokens_used=tokens_used,
     )
 
     async_session.add(message)
