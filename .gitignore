@@ -1,0 +1,8 @@
+.env
+.idea
+.mypy_cache
+.pdm.toml
+.venv
+.vscode
+__pycache__
+__pypackages__
