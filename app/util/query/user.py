@@ -56,7 +56,7 @@ async def toggle_allowed_user_by_telegram_id(
     if not user:
         user = UserModel(
             telegram_id=telegram_id,
-            allowed=True,
+            is_allowed=True,
         )
         async_session.add(user)
         return user
