@@ -2,6 +2,7 @@ from collections.abc import Callable
 
 from aiogram import Router
 from aiogram.types import Message
+from cryptography.fernet import Fernet
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.model.models import UserModel
@@ -12,9 +13,10 @@ chat_router = Router(name="chat router")
 
 
 @chat_router.message()
-async def text_handler(
+async def text_handler(  # noqa: WPS211 Found too many arguments
     message: Message,
     async_session: AsyncSession,
+    fernet: Fernet,
     user: UserModel,
     chat_prompt: Callable[[list[ChatGPTMessage]], tuple[int, ChatGPTMessage]],
     message_text: str,
@@ -27,7 +29,7 @@ async def text_handler(
     previous_messages = [
         ChatGPTMessage(
             role=message.role,
-            content=message.content,
+            content=fernet.decrypt(message.content).decode(),
         )
         for message in previous_messages_models
     ]
@@ -41,13 +43,15 @@ async def text_handler(
 
     await save_message(
         async_session=async_session,
-        chat_gpt_message=user_prompt,
+        role=Role.USER,
+        content=fernet.encrypt(message_text.encode()),
         user=user,
     )
 
     await save_message(
         async_session=async_session,
-        chat_gpt_message=answer,
+        role=Role.ASSISTANT,
+        content=fernet.encrypt(answer.content.encode()),
         user=user,
     )
 

@@ -2,7 +2,7 @@ from datetime import datetime
 
 from sqlalchemy import BIGINT, TIMESTAMP, Boolean
 from sqlalchemy import Enum as EnumType
-from sqlalchemy import ForeignKey, Integer, String, func
+from sqlalchemy import ForeignKey, Integer, LargeBinary, String, func
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 from app.model.schema.open_ai import Role
@@ -48,7 +48,7 @@ class MessageModel(Base):
     )
 
     # WPS432 Found magic number: 4096
-    content: Mapped[str] = mapped_column(String(4096))  # noqa: WPS432
+    content: Mapped[bytes] = mapped_column(LargeBinary)  # noqa: WPS432
     role: Mapped[Role] = mapped_column(EnumType(Role, name="role"))
 
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"))

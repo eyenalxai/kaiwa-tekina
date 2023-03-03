@@ -12,6 +12,7 @@ dependencies = [
     "SQLAlchemy>=2.0.4",
     "asyncpg>=0.27.0",
     "greenlet>=2.0.2",
+    "cryptography>=39.0.2",
 ]
 requires-python = ">=3.11"
 license = {text = "MIT"}

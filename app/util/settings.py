@@ -23,6 +23,8 @@ class SharedSettings(BaseSettings):
 
     messages_limit: int = Field(env="MESSAGES_LIMIT", default=10)
 
+    fernet_key: str = Field(..., env="FERNET_KEY")
+
     @property
     def async_database_url(self: "SharedSettings") -> str:
         return self.database_url.replace(
@@ -46,6 +48,10 @@ class SharedSettings(BaseSettings):
         if not v.startswith("postgresql://"):
             raise ValueError("DATABASE_URL must start with postgresql://")
         return v
+
+    @property
+    def fernet_key_bytes(self: "SharedSettings") -> bytes:
+        return self.fernet_key.encode()
 
 
 shared_settings = SharedSettings()

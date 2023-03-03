@@ -4,18 +4,19 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.model.models import MessageModel, UserModel
-from app.model.schema.open_ai import ChatGPTMessage
+from app.model.schema.open_ai import Role
 from app.util.settings import shared_settings
 
 
 async def save_message(
     async_session: AsyncSession,
-    chat_gpt_message: ChatGPTMessage,
+    role: Role,
+    content: bytes,
     user: UserModel,
 ) -> None:
     message = MessageModel(
-        role=chat_gpt_message.role,
-        content=chat_gpt_message.content,
+        role=role,
+        content=content,
         user=user,
     )
 
