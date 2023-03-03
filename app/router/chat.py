@@ -67,7 +67,7 @@ async def text_handler(  # noqa: WPS211 Found too many arguments
     except TelegramBadRequest as e:
         logger.error(e.message)
         reply_error_text = (
-            "Something went wrong, please try asking in a different way"
+            "Can't send you a reply from ChatGPT, please try asking in a different way"
             "\n\nHere is an error that I got:\n<i>{error_message}</i>".format(
                 error_message=e.message,
             )
