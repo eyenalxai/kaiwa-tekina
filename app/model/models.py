@@ -28,9 +28,9 @@ class UserModel(Base):
     username: Mapped[str | None] = mapped_column(
         String(32),  # noqa: WPS432 Found magic number
     )
-    full_name: Mapped[str] = mapped_column(
+    full_name: Mapped[str | None] = mapped_column(
         String(128),  # noqa: WPS432 Found magic number
-        nullable=False,
+        nullable=True,
     )
 
     messages: Mapped[list["MessageModel"]] = relationship(back_populates="user")

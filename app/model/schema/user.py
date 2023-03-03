@@ -6,7 +6,7 @@ class User(Immutable):
         orm_mode = True
 
     username: str | None
-    full_name: str
+    full_name: str | None
     telegram_id: int
 
 
