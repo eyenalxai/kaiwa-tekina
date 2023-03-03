@@ -26,13 +26,15 @@ async def text_handler(  # noqa: WPS211 Found too many arguments
         user=user,
     )
 
-    previous_messages = [
-        ChatGPTMessage(
-            role=message.role,
-            content=fernet.decrypt(message.content).decode(),
-        )
-        for message in previous_messages_models
-    ]
+    previous_messages = reversed(
+        [
+            ChatGPTMessage(
+                role=message.role,
+                content=fernet.decrypt(message.content).decode(),
+            )
+            for message in previous_messages_models
+        ],
+    )
 
     user_prompt = ChatGPTMessage(
         role=Role.USER,
@@ -57,4 +59,5 @@ async def text_handler(  # noqa: WPS211 Found too many arguments
 
     user.tokens_used += tokens_used
 
+    await async_session.commit()
     await message.reply(text=answer.content)
