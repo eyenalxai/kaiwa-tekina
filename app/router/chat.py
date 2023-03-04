@@ -5,12 +5,14 @@ from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import Message
 from cryptography.fernet import Fernet
 from sqlalchemy.ext.asyncio import AsyncSession
+from tiktoken import Encoding
 
 from app.config.log import logger
 from app.model.models import UserModel
 from app.model.schema.open_ai import ChatGPTMessage, OpenAIError, Role
 from app.util.messages import get_previous_messages, save_messages
 from app.util.open_ai.chat_gpt import ReturnType
+from app.util.settings import shared_settings
 from app.util.stuff import split_text
 
 chat_router = Router(name="chat router")
@@ -21,6 +23,7 @@ async def text_handler(  # noqa: WPS211 Found too many arguments
     message: Message,
     async_session: AsyncSession,
     fernet: Fernet,
+    tokenizer: Encoding,
     user: UserModel,
     chat_prompt: Callable[[list[ChatGPTMessage]], tuple[int, ReturnType]],
     message_text: str,
@@ -31,9 +34,15 @@ async def text_handler(  # noqa: WPS211 Found too many arguments
         user=user,
     )
 
-    # Total length of the messages
-    length = sum(len(m.content) for m in previous_messages)
-    logger.info("Total length of the messages: {length}".format(length=length))
+    total_tokens = sum(
+        len(tokenizer.encode(message.content)) for message in previous_messages
+    )
+
+    while total_tokens > shared_settings.max_tokens_per_request:
+        previous_messages.pop(0)
+        total_tokens = sum(
+            len(tokenizer.encode(message.content)) for message in previous_messages
+        )
 
     tokens_used, answer = chat_prompt(
         [

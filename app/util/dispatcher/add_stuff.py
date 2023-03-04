@@ -1,5 +1,6 @@
 from aiogram import Dispatcher
 from sqlalchemy.ext.asyncio import create_async_engine
+from tiktoken import encoding_for_model
 
 from app.middleware.database_session import get_async_database_session
 from app.middleware.text import filter_non_text
@@ -38,5 +39,6 @@ def add_stuff(dispatcher: Dispatcher) -> Dispatcher:
 
     dispatcher["chat_prompt"] = chat_gpt_wrapper()
     dispatcher["fernet"] = initialize_fernet(key=shared_settings.fernet_key_bytes)
+    dispatcher["tokenizer"] = encoding_for_model("gpt-3.5-turbo")
 
     return dispatcher
