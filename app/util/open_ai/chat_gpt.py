@@ -1,5 +1,7 @@
 from collections.abc import Callable
 
+from tiktoken import Encoding
+
 from app.model.schema.open_ai import ChatCompletion, ChatGPTMessage, OpenAIError
 from app.util.open_ai.send_request import send_openai_request
 from app.util.settings import shared_settings
@@ -7,6 +9,23 @@ from app.util.settings import shared_settings
 
 def first_choice(chat_completion: ChatCompletion) -> ChatGPTMessage:
     return min(chat_completion.choices, key=lambda choice: choice.index).message
+
+
+def token_reducer(
+    previous_messages: list[ChatGPTMessage],
+    tokenizer: Encoding,
+) -> list[ChatGPTMessage]:
+    total_tokens = sum(
+        len(tokenizer.encode(message.content)) for message in previous_messages
+    )
+
+    while total_tokens > shared_settings.max_tokens_per_request:
+        previous_messages.pop(0)
+        total_tokens = sum(
+            len(tokenizer.encode(message.content)) for message in previous_messages
+        )
+
+    return previous_messages
 
 
 def get_token_count_and_message(
