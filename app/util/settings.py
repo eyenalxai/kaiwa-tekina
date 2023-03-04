@@ -18,7 +18,7 @@ class SharedSettings(BaseSettings):
     openai_token: str = Field(..., env="OPENAI_TOKEN")
     openai_chat_api_url = "https://api.openai.com/v1/chat/completions"
 
-    max_tokens_per_request: int = 3072
+    max_tokens_per_request: int = 4096
     per_token_price: float = 0.002
 
     # Example: [1234567890, 1234567890, ...] # noqa: E800 Found commented out code
@@ -55,6 +55,12 @@ class SharedSettings(BaseSettings):
     @property
     def fernet_key_bytes(self: "SharedSettings") -> bytes:
         return self.fernet_key.encode()
+
+    @property
+    def max_prompt_tokens(self: "SharedSettings") -> int:
+        return int(
+            self.max_tokens_per_request * 0.75,  # noqa: WPS432 Found magic number
+        )
 
 
 shared_settings = SharedSettings()
