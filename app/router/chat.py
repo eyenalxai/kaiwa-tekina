@@ -31,6 +31,10 @@ async def text_handler(  # noqa: WPS211 Found too many arguments
         user=user,
     )
 
+    # Total length of the messages
+    length = sum(len(m.content) for m in previous_messages)
+    logger.info("Total length of the messages: {length}".format(length=length))
+
     tokens_used, answer = chat_prompt(
         [
             *previous_messages,
