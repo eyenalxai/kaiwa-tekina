@@ -52,3 +52,5 @@ async def save_messages(  # noqa:  WPS211 Found too many arguments: 6 > 5
         user=user,
         tokens_used=tokens_used,
     )
+
+    await async_session.commit()

@@ -26,3 +26,14 @@ class Usage(Immutable):
 class ChatCompletion(Immutable):
     choices: list[Choice]
     usage: Usage
+
+
+class ChatError(Immutable):
+    message: str
+    type: str
+    param: str
+    code: str
+
+
+class OpenAIError(Immutable):
+    error: ChatError

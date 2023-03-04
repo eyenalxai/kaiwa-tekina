@@ -8,8 +8,9 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config.log import logger
 from app.model.models import UserModel
-from app.model.schema.open_ai import ChatGPTMessage, Role
+from app.model.schema.open_ai import ChatGPTMessage, OpenAIError, Role
 from app.util.messages import get_previous_messages, save_messages
+from app.util.open_ai.chat_gpt import ReturnType
 from app.util.stuff import split_text
 
 chat_router = Router(name="chat router")
@@ -21,7 +22,7 @@ async def text_handler(  # noqa: WPS211 Found too many arguments
     async_session: AsyncSession,
     fernet: Fernet,
     user: UserModel,
-    chat_prompt: Callable[[list[ChatGPTMessage]], tuple[int, ChatGPTMessage]],
+    chat_prompt: Callable[[list[ChatGPTMessage]], tuple[int, ReturnType]],
     message_text: str,
 ) -> None:
     previous_messages = await get_previous_messages(
@@ -40,6 +41,19 @@ async def text_handler(  # noqa: WPS211 Found too many arguments
         ],
     )
 
+    if isinstance(answer, OpenAIError):
+        await message.reply(
+            text="\n\n".join(
+                [
+                    "Can't send you a reply, please try asking in a different way",
+                    "Here is an error that I got:\n<i>{error_message}</i>".format(
+                        error_message=answer.error.message,
+                    ),
+                ],
+            ),
+        )
+        return
+
     await save_messages(
         async_session=async_session,
         message_text=message_text,
@@ -48,8 +62,6 @@ async def text_handler(  # noqa: WPS211 Found too many arguments
         answer=answer,
         tokens_used=tokens_used,
     )
-
-    await async_session.commit()
 
     parts = split_text(text=answer.content)
 
