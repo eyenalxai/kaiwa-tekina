@@ -18,3 +18,11 @@ def username_or_full_name(user: User) -> str:
         return "{full_name}".format(full_name=user.full_name)
 
     return str(user.telegram_id)
+
+
+def split_text(text: str) -> list[str]:
+    telegram_limit = 4096
+    return [
+        text[idx : idx + telegram_limit]  # noqa: E203 whitespace before ':'
+        for idx in range(0, len(text), telegram_limit)
+    ]

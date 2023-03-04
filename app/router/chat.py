@@ -10,6 +10,7 @@ from app.config.log import logger
 from app.model.models import UserModel
 from app.model.schema.open_ai import ChatGPTMessage, Role
 from app.util.messages import get_previous_messages, save_messages
+from app.util.stuff import split_text
 
 chat_router = Router(name="chat router")
 
@@ -50,22 +51,20 @@ async def text_handler(  # noqa: WPS211 Found too many arguments
 
     await async_session.commit()
 
-    parts = [
-        answer.content[i : i + 4096]  # noqa: E203
-        for i in range(0, len(answer.content), 4096)
-    ]
+    parts = split_text(text=answer.content)
 
     try:
         for part in parts:
             await message.answer(text=part)
     except TelegramBadRequest as exception:
         logger.error(exception.message)
-        reply_error_text = "\n\n".join(
-            [
-                "Can't send you a reply, please try asking in a different way",
-                "Here is an error that I got:\n<i>{error_message}</i>".format(
-                    error_message=exception.message,
-                ),
-            ],
+        await message.reply(
+            text="\n\n".join(
+                [
+                    "Can't send you a reply, please try asking in a different way",
+                    "Here is an error that I got:\n<i>{error_message}</i>".format(
+                        error_message=exception.message,
+                    ),
+                ],
+            ),
         )
-        await message.reply(text=reply_error_text)
