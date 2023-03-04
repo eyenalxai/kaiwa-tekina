@@ -50,8 +50,14 @@ async def text_handler(  # noqa: WPS211 Found too many arguments
 
     await async_session.commit()
 
+    parts = [
+        answer.content[i : i + 4096]  # noqa: E203
+        for i in range(0, len(answer.content), 4096)
+    ]
+
     try:
-        await message.reply(text=answer.content)
+        for part in parts:
+            await message.answer(text=part)
     except TelegramBadRequest as exception:
         logger.error(exception.message)
         reply_error_text = "\n\n".join(
