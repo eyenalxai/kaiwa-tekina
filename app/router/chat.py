@@ -9,10 +9,10 @@ from tiktoken import Encoding
 
 from app.config.log import logger
 from app.model.models import UserModel
-from app.model.schema.open_ai import ChatGPTMessage, OpenAIError, Role
+from app.model.schema.open_ai import ChatGPTMessage, OpenAIError
 from app.util.messages import save_messages
-from app.util.open_ai.chat_gpt import ReturnType
-from app.util.stuff import get_previous_messages_with_token_adjusted, split_text
+from app.util.open_ai.chat_gpt import ReturnType, respond_to_chat_message
+from app.util.stuff import split_text
 
 chat_router = Router(name="chat router")
 
@@ -27,21 +27,13 @@ async def text_handler(  # noqa: WPS211 Found too many arguments
     chat_prompt: Callable[[list[ChatGPTMessage]], tuple[int, ReturnType]],
     message_text: str,
 ) -> None:
-    previous_messages = await get_previous_messages_with_token_adjusted(
+    tokens_used, answer = await respond_to_chat_message(
         async_session=async_session,
         fernet=fernet,
         tokenizer=tokenizer,
         user=user,
-    )
-
-    tokens_used, answer = chat_prompt(
-        [
-            *previous_messages,
-            ChatGPTMessage(
-                role=Role.USER,
-                content=message_text,
-            ),
-        ],
+        chat_prompt=chat_prompt,
+        message_text=message_text,
     )
 
     if isinstance(answer, OpenAIError):

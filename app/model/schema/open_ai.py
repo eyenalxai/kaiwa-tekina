@@ -20,8 +20,6 @@ class Choice(Immutable):
 
 
 class Usage(Immutable):
-    prompt_tokens: int
-    completion_tokens: int
     total_tokens: int
 
 
@@ -32,9 +30,6 @@ class ChatCompletion(Immutable):
 
 class ChatError(Immutable):
     message: str
-    type: str
-    param: str
-    code: str
 
 
 class OpenAIError(Immutable):
