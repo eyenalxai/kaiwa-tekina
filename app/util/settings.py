@@ -59,7 +59,7 @@ class SharedSettings(BaseSettings):
     @property
     def max_prompt_tokens(self: "SharedSettings") -> int:
         return int(
-            self.max_tokens_per_request * 0.75,  # noqa: WPS432 Found magic number
+            self.max_tokens_per_request * 0.8,  # noqa: WPS432 Found magic number
         )
 
 
