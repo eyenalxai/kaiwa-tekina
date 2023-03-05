@@ -22,7 +22,7 @@ def token_reducer(
     total_tokens = sum(len(tokenizer.encode(message.content)) for message in messages)
 
     while total_tokens > shared_settings.max_prompt_tokens:
-        messages.pop()
+        messages.pop(0)
         total_tokens = sum(
             len(tokenizer.encode(message.content)) for message in messages
         )
