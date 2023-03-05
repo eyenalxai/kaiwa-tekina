@@ -32,7 +32,7 @@ async def get_last_messages_by_user(
     query = (
         select(MessageModel)
         .where(MessageModel.user == user)
-        .order_by(MessageModel.created_at.desc())
+        .order_by(MessageModel.id.desc())
         .limit(shared_settings.messages_limit)
     )
 
