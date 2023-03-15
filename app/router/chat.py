@@ -10,6 +10,7 @@ from tiktoken import Encoding
 from app.config.log import logger
 from app.model.models import UserModel
 from app.model.schema.open_ai import ChatGPTMessage, OpenAIError
+from app.util.display.html import markdown_to_html
 from app.util.messages import save_messages
 from app.util.open_ai.chat_gpt import ReturnType, respond_to_chat_message
 from app.util.stuff import split_text
@@ -62,7 +63,7 @@ async def text_handler(  # noqa: WPS211 Found too many arguments
 
     try:
         for part in parts:
-            await message.answer(text=part)
+            await message.answer(text=markdown_to_html(text=part))
     except TelegramBadRequest as exception:
         logger.error(exception.message)
         await message.reply(
