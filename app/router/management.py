@@ -73,7 +73,8 @@ async def command_list_handler(
 
     message_text = "Top 10 users by tokens used:\n\n{users_list}".format(
         users_list="\n".join(
-            "{username}: ${money}".format(
+            "<code>${money}</code> — {username} ({id})".format(
+                id=user_usage.user.telegram_id,
                 username=username_or_full_name(user=user_usage.user),
                 money=user_usage.money,
             )
