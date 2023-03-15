@@ -1,4 +1,5 @@
 from aiogram import Dispatcher
+from lingua import Language, LanguageDetectorBuilder
 from sqlalchemy.ext.asyncio import create_async_engine
 from tiktoken import encoding_for_model
 
@@ -40,5 +41,14 @@ def add_stuff(dispatcher: Dispatcher) -> Dispatcher:
     dispatcher["chat_prompt"] = chat_gpt_wrapper()
     dispatcher["fernet"] = initialize_fernet(key=shared_settings.fernet_key_bytes)
     dispatcher["tokenizer"] = encoding_for_model("gpt-3.5-turbo")
+
+    return dispatcher
+
+
+def add_language_detection(dispatcher: Dispatcher) -> Dispatcher:
+    dispatcher["language_detector"] = LanguageDetectorBuilder.from_languages(
+        Language.ENGLISH,
+        Language.RUSSIAN,
+    ).build()
 
     return dispatcher

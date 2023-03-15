@@ -122,6 +122,7 @@ def get_html_tags() -> tuple[list[str], list[str]]:
         "tt",
         "u",
         "ul",
+        "v",
         "var",
         "video",
         "wbr",
