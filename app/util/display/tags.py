@@ -60,6 +60,7 @@ def get_html_tags() -> tuple[list[str], list[str]]:
         "i",
         "input",
         "ins",
+        "img",
         "isindex",
         "kbd",
         "keygen",
