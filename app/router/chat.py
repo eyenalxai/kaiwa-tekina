@@ -1,12 +1,14 @@
 from collections.abc import Callable
 
 from aiogram import Router
+from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import Message
 from cryptography.fernet import Fernet
 from lingua import Language
 from sqlalchemy.ext.asyncio import AsyncSession
 from tiktoken import Encoding
 
+from app.config.log import logger
 from app.model.models import UserModel
 from app.model.schema.open_ai import ChatGPTMessage
 from app.util.display.html import markdown_to_html
@@ -71,6 +73,13 @@ async def text_handler(  # noqa: WPS211, WPS217
         tokens_used=tokens_used,
     )
 
-    await sent_message.delete()
-    for part in split_text_into_parts(text=answer.content):
-        await message.answer(text=markdown_to_html(text=part))
+    try:
+        await sent_message.delete()
+        for part in split_text_into_parts(text=answer.content):
+            await message.answer(text=markdown_to_html(text=part))
+    except TelegramBadRequest as exception:
+        logger.error(exception.message)
+        return await send_error_message(
+            message=message,
+            error_message=exception.message,
+        )

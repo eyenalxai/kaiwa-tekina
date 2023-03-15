@@ -14,6 +14,7 @@ ignore = B008 Do not perform function calls in argument defaults
          WPS115 Found upper-case constant in a class
          WPS201 Found module with too many imports
          WPS221 Found line with high Jones Complexity
+         WPS229 Found too long ``try`` body length
          WPS303 Found underscored number
          WPS306 Found class without a base class
          WPS348 Found a line that starts with a dot
