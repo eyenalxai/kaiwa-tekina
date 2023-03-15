@@ -26,20 +26,18 @@ def remove_tags(text: str, tags_to_remove: list[str]) -> str:
     return reduce(remove_tag, tags_to_remove, text)
 
 
-def replace_tag(text: str, tag: str) -> str:
-    replace_with = opening_tag(tag="b")
-
+def replace_header_tag(text: str, tag: str) -> str:
     return text.replace(
         opening_tag(tag=tag),
-        replace_with,
+        opening_tag(tag="b"),
     ).replace(
         closing_tag(tag=tag),
-        replace_with,
+        closing_tag(tag="b"),
     )
 
 
 def replace_header_tags(text: str, header_tags: list[str]) -> str:
-    return reduce(replace_tag, header_tags, text)
+    return reduce(replace_header_tag, header_tags, text)
 
 
 def markdown_to_html(text: str) -> str:
