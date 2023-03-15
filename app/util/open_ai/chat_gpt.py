@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from tiktoken import Encoding
 
 from app.model.models import UserModel
-from app.model.schema.open_ai import ChatCompletion, ChatGPTMessage, OpenAIError, Role
+from app.model.schema.open_ai import ChatCompletion, ChatGPTMessage, Role
 from app.util.messages import get_previous_messages
 from app.util.open_ai.send_request import send_openai_request
 from app.util.settings import shared_settings
@@ -39,10 +39,7 @@ def get_token_count_and_message(
     )
 
 
-ReturnType = ChatGPTMessage | OpenAIError
-
-
-def chat_gpt_wrapper() -> Callable[[list[ChatGPTMessage]], tuple[int, ReturnType]]:
+def chat_gpt_wrapper() -> Callable[[list[ChatGPTMessage]], tuple[int, ChatGPTMessage]]:
     url = shared_settings.openai_chat_api_url
     headers = {
         "Content-Type": "application/json",
@@ -53,15 +50,12 @@ def chat_gpt_wrapper() -> Callable[[list[ChatGPTMessage]], tuple[int, ReturnType
 
     def chat_prompt(
         messages: list[ChatGPTMessage],
-    ) -> tuple[int, ReturnType]:
-        response, is_error = send_openai_request(
+    ) -> tuple[int, ChatGPTMessage]:
+        response = send_openai_request(
             url=url,
             headers=headers,
             messages=messages,
         )
-
-        if is_error:
-            return 0, OpenAIError(**response.json())
 
         chat_completion = ChatCompletion(**response.json())
 
@@ -94,9 +88,9 @@ async def respond_to_chat_message(  # noqa: WPS211 Found too many arguments
     fernet: Fernet,
     tokenizer: Encoding,
     user: UserModel,
-    chat_prompt: Callable[[list[ChatGPTMessage]], tuple[int, ReturnType]],
+    chat_prompt: Callable[[list[ChatGPTMessage]], tuple[int, ChatGPTMessage]],
     message_text: str,
-) -> tuple[int, ReturnType]:
+) -> tuple[int, ChatGPTMessage]:
     previous_messages = await get_previous_messages(
         async_session=async_session,
         fernet=fernet,

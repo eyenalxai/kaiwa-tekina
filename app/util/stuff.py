@@ -20,7 +20,7 @@ def username_or_full_name(user: User) -> str:
     return str(user.telegram_id)
 
 
-def split_text(text: str) -> list[str]:
+def split_text_into_parts(text: str) -> list[str]:
     telegram_limit = 4096
     return [
         text[idx : idx + telegram_limit]  # noqa: E203 whitespace before ':'

@@ -5,11 +5,17 @@ from app.config.log import logger
 from app.model.schema.open_ai import ChatGPTMessage
 
 
+class OpenAIError(Exception):
+    def __init__(self, message: str) -> None:
+        super().__init__(message)
+        self.message = message
+
+
 def send_openai_request(
     url: str,
     headers: dict[str, str],
     messages: list[ChatGPTMessage],
-) -> tuple[Response, bool]:
+) -> Response:
     response = http_client.post(
         url=url,
         headers=headers,
@@ -33,12 +39,16 @@ def send_openai_request(
                 ),
             ),
         )
-        return http_status_error.response, True
+        raise OpenAIError(
+            message=http_status_error.response.text or "No error message :(",
+        )
 
     except Exception as exception:
         logger.error(
             "Error: {exception}".format(exception=exception),
         )
-        raise
+        raise OpenAIError(
+            message="Unknown error",
+        )
 
-    return response, False
+    return response

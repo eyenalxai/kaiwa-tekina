@@ -38,19 +38,6 @@ def replace_tag(text: str, tag: str) -> str:
     )
 
 
-def new_line_around_code(text: str) -> str:
-    opening = opening_tag(tag="code")
-    closing = closing_tag(tag="code")
-
-    return text.replace(
-        opening,
-        "\n{open}".format(open=opening),
-    ).replace(
-        closing,
-        "{close}\n".format(close=closing),
-    )
-
-
 def replace_header_tags(text: str, header_tags: list[str]) -> str:
     return reduce(replace_tag, header_tags, text)
 

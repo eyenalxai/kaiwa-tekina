@@ -6,6 +6,7 @@ ignore = B008 Do not perform function calls in argument defaults
          D103 Missing docstring in public function
          D104 Missing docstring in public package
          D106 Missing docstring in public nested class
+         D107 Missing docstring in __init__
          Q000 Double quotes found but single quotes preferred
          S104 Possible binding to all interfaces
          S311 Standard pseudo-random generators are not suitable for security/cryptographic purposes.
