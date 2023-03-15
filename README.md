@@ -2,7 +2,7 @@
 
 This is a Python application that runs a Telegram bot and utilizes OpenAI's GPT-3 API. It is built on top of the `python:slim` Docker image and uses the PDM package manager for Python dependencies.
 
-## Installation
+## Usage
 
 Before you can run the application, you need to have the following environment variables set:
 
@@ -31,6 +31,20 @@ docker run -e ADMIN_USER_IDS=<user_ids> \
            -p <expose_port>:<port> \
            my-telegram-bot
 ```
+### Database Migrations
+
+You need to make changes to the database schema, you can use Alembic to manage database migrations. 
+
+
+To apply the migrations, you can use the `alembic upgrade` command:
+
+```bash
+DATABASE_URL=<database_url> alembic upgrade head
+```
+
+This will apply all of the pending migrations to the database.
+
+Note that you will need to include the `DATABASE_URL` environment variable when running Alembic commands, just like you do when running the main application container.
 
 ## Usage
 
