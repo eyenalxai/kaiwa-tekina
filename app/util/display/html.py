@@ -27,7 +27,7 @@ def remove_tags(text: str, tags_to_remove: list[str]) -> str:
 
 
 def replace_tag(text: str, tag: str) -> str:
-    replace_with = opening_tag(tag="v")
+    replace_with = opening_tag(tag="b")
 
     return text.replace(
         opening_tag(tag=tag),
