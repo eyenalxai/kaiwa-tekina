@@ -1,5 +1,6 @@
 from functools import reduce
 
+from bs4 import BeautifulSoup
 from markdown import markdown
 
 from app.util.display.format import (
@@ -11,6 +12,18 @@ from app.util.display.format import (
 from app.util.display.tags import get_html_tags
 
 
+def replace_img_with_a_tag_bs4(*, html_text: str) -> str:
+    soup = BeautifulSoup(html_text, "html.parser")
+
+    for img_tag in soup.find_all("img"):
+        img_tag.name = "a"
+        img_tag["href"] = img_tag["src"]
+        del img_tag["alt"]  # noqa: WPS420 Found wrong keyword del
+        del img_tag["src"]  # noqa: WPS420 Found wrong keyword del
+
+    return str(soup)
+
+
 def remove_tag(text: str, tag: str) -> str:
     replace_with = ""
 
@@ -19,6 +32,7 @@ def remove_tag(text: str, tag: str) -> str:
         .replace(closing_tag(tag=tag), replace_with)
         .replace(self_closing_tag_no_space(tag=tag), replace_with)
         .replace(self_closing_tag_space(tag=tag), replace_with)
+        .replace("<img", "<a")  # I'm sorry
     )
 
 
@@ -41,10 +55,14 @@ def replace_header_tags(text: str, header_tags: list[str]) -> str:
 
 
 def markdown_to_html(*, text: str) -> str:
-    html = markdown(text, extensions=["fenced_code"])
+    html = replace_img_with_a_tag_bs4(
+        html_text=markdown(text, extensions=["fenced_code"]),
+    )
     header_tags, tags_to_remove = get_html_tags()
 
-    return replace_header_tags(
-        text=remove_tags(text=html, tags_to_remove=tags_to_remove),
-        header_tags=header_tags,
+    return replace_img_with_a_tag_bs4(
+        html_text=replace_header_tags(
+            text=remove_tags(text=html, tags_to_remove=tags_to_remove),
+            header_tags=header_tags,
+        ),
     )

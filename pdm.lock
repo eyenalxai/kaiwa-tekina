@@ -101,6 +101,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "beautifulsoup4"
+version = "4.11.2"
+requires_python = ">=3.6.0"
+summary = "Screen-scraping library"
+dependencies = [
+    "soupsieve>1.2",
+]
+
+[[package]]
 name = "black"
 version = "23.1.0"
 requires_python = ">=3.7"
@@ -687,6 +696,12 @@ version = "2.2.0"
 summary = "This package provides 29 stemmers for 28 languages generated from Snowball algorithms."
 
 [[package]]
+name = "soupsieve"
+version = "2.4"
+requires_python = ">=3.7"
+summary = "A modern CSS selector implementation for Beautiful Soup."
+
+[[package]]
 name = "sqlalchemy"
 version = "2.0.4"
 requires_python = ">=3.7"
@@ -721,6 +736,19 @@ name = "toml"
 version = "0.10.2"
 requires_python = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
 summary = "Python Library for Tom's Obvious, Minimal Language"
+
+[[package]]
+name = "types-beautifulsoup4"
+version = "4.11.6.7"
+summary = "Typing stubs for beautifulsoup4"
+dependencies = [
+    "types-html5lib",
+]
+
+[[package]]
+name = "types-html5lib"
+version = "1.1.11.12"
+summary = "Typing stubs for html5lib"
 
 [[package]]
 name = "types-markdown"
@@ -798,7 +826,7 @@ dependencies = [
 
 [metadata]
 lock_version = "4.1"
-content_hash = "sha256:6cec9c658294795b50170d2bda7cf42f67bbaabf556bce87474f8b340d817f95"
+content_hash = "sha256:40f6139869c7a43fc2652271766c2f8ee58316874da707a68861171ab7c9b3fc"
 
 [metadata.files]
 "aiofiles 23.1.0" = [
@@ -963,6 +991,10 @@ content_hash = "sha256:6cec9c658294795b50170d2bda7cf42f67bbaabf556bce87474f8b340
 "bandit 1.7.4" = [
     {url = "https://files.pythonhosted.org/packages/39/36/a37a2f6f8d0ed8c3bc616616ed5019e1df2680bd8b7df49ceae80fd457de/bandit-1.7.4.tar.gz", hash = "sha256:2d63a8c573417bae338962d4b9b06fbc6080f74ecd955a092849e1e65c717bd2"},
     {url = "https://files.pythonhosted.org/packages/da/eb/ff828f4ec32c85e10d9c344e6b7f11bcacfb5d70f2fd16bea6fc1ae6df06/bandit-1.7.4-py3-none-any.whl", hash = "sha256:412d3f259dab4077d0e7f0c11f50f650cc7d10db905d98f6520a95a18049658a"},
+]
+"beautifulsoup4 4.11.2" = [
+    {url = "https://files.pythonhosted.org/packages/75/f8/de84282681c5a8307f3fff67b64641627b2652752d49d9222b77400d02b8/beautifulsoup4-4.11.2.tar.gz", hash = "sha256:bc4bdda6717de5a2987436fb8d72f45dc90dd856bdfd512a1314ce90349a0106"},
+    {url = "https://files.pythonhosted.org/packages/c6/ee/16d6f808f5668317d7c23f942091fbc694bcded6aa39678e5167f61b2ba0/beautifulsoup4-4.11.2-py3-none-any.whl", hash = "sha256:0e79446b10b3ecb499c1556f7e228a53e64a2bfcebd455f370d8927cb5b59e39"},
 ]
 "black 23.1.0" = [
     {url = "https://files.pythonhosted.org/packages/01/8a/065d0a59c1ebe13186b12a2fa3965a41fc1588828709995e2630004d216e/black-23.1.0-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:8178318cb74f98bc571eef19068f6ab5613b3e59d4f47771582f04e175570ed8"},
@@ -2017,6 +2049,10 @@ content_hash = "sha256:6cec9c658294795b50170d2bda7cf42f67bbaabf556bce87474f8b340
     {url = "https://files.pythonhosted.org/packages/44/7b/af302bebf22c749c56c9c3e8ae13190b5b5db37a33d9068652e8f73b7089/snowballstemmer-2.2.0.tar.gz", hash = "sha256:09b16deb8547d3412ad7b590689584cd0fe25ec8db3be37788be3810cbf19cb1"},
     {url = "https://files.pythonhosted.org/packages/ed/dc/c02e01294f7265e63a7315fe086dd1df7dacb9f840a804da846b96d01b96/snowballstemmer-2.2.0-py2.py3-none-any.whl", hash = "sha256:c8e1716e83cc398ae16824e5572ae04e0d9fc2c6b985fb0f900f5f0c96ecba1a"},
 ]
+"soupsieve 2.4" = [
+    {url = "https://files.pythonhosted.org/packages/1b/cb/34933ebdd6bf6a77daaa0bd04318d61591452eb90ecca4def947e3cb2165/soupsieve-2.4.tar.gz", hash = "sha256:e28dba9ca6c7c00173e34e4ba57448f0688bb681b7c5e8bf4971daafc093d69a"},
+    {url = "https://files.pythonhosted.org/packages/d2/70/2c92d7bc961ba43b7b21032b7622144de5f97dec14b62226533f6940798e/soupsieve-2.4-py3-none-any.whl", hash = "sha256:49e5368c2cda80ee7e84da9dbe3e110b70a4575f196efb74e51b94549d921955"},
+]
 "sqlalchemy 2.0.4" = [
     {url = "https://files.pythonhosted.org/packages/01/9a/aaea1bfc62ead69bb736ca94016375907d7115a13142ef2808449d939d74/SQLAlchemy-2.0.4-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:817aab80f7e8fe581696dae7aaeb2ceb0b7ea70ad03c95483c9115970d2a9b00"},
     {url = "https://files.pythonhosted.org/packages/07/49/e0c37232aaa32722358308011180843cfb90dba4c8e721106a76ff81a6d9/SQLAlchemy-2.0.4-cp37-cp37m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:67901b91bf5821482fcbe9da988cb16897809624ddf0fde339cd62365cc50032"},
@@ -2090,6 +2126,14 @@ content_hash = "sha256:6cec9c658294795b50170d2bda7cf42f67bbaabf556bce87474f8b340
 "toml 0.10.2" = [
     {url = "https://files.pythonhosted.org/packages/44/6f/7120676b6d73228c96e17f1f794d8ab046fc910d781c8d151120c3f1569e/toml-0.10.2-py2.py3-none-any.whl", hash = "sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b"},
     {url = "https://files.pythonhosted.org/packages/be/ba/1f744cdc819428fc6b5084ec34d9b30660f6f9daaf70eead706e3203ec3c/toml-0.10.2.tar.gz", hash = "sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f"},
+]
+"types-beautifulsoup4 4.11.6.7" = [
+    {url = "https://files.pythonhosted.org/packages/30/48/c580efa4b07d2970b5512c903ca3373498e64f9900e7ab81efcf6d20a862/types-beautifulsoup4-4.11.6.7.tar.gz", hash = "sha256:ecca610052c5418a9a2ade28a0c1995ca0b90c8450a70de8dc26a118de2aca56"},
+    {url = "https://files.pythonhosted.org/packages/7d/02/2efd71cb438be89750977e08e79f8619d94136365fdf6f8f6fa8941811f1/types_beautifulsoup4-4.11.6.7-py3-none-any.whl", hash = "sha256:49ada75863d0d89fc4ad29f064d75c022cb2ad389e17271f0517f8fb34080715"},
+]
+"types-html5lib 1.1.11.12" = [
+    {url = "https://files.pythonhosted.org/packages/db/ac/deb9d70d9193f9087aa6962bad004c16d1fb62bbc86e8d73c1c26a4bbfa8/types_html5lib-1.1.11.12-py3-none-any.whl", hash = "sha256:c70bb3c65e061bc1f32bcf0edbb89ebdd5917aee7cc5557f68078ea105069184"},
+    {url = "https://files.pythonhosted.org/packages/e0/23/543731cd9d595daecfc7baa2d2ba6ff5ca1e2ffa48e073315f8dcc39b7bf/types-html5lib-1.1.11.12.tar.gz", hash = "sha256:267c58f59977bde713e6077b5ec944e6e44140eb51f859990284cf4e37e17ef9"},
 ]
 "types-markdown 3.4.2.5" = [
     {url = "https://files.pythonhosted.org/packages/6d/a2/6dad2e1febf200e09608c210dc6a56ae84271231bd35a9a6d13a9d75d9ee/types-Markdown-3.4.2.5.tar.gz", hash = "sha256:e76a2a07166f7c69aadf5fa51ef954d2baaed35eb8fa30c36f10877d8403fcef"},
