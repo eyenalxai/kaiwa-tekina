@@ -10,10 +10,12 @@ async def get_previous_messages(
     async_session: AsyncSession,
     fernet: Fernet,
     user: UserModel,
+    messages_limit: int,
 ) -> list[ChatGPTMessage]:
     previous_messages_models = await get_last_messages_by_user(
         async_session=async_session,
         user=user,
+        messages_limit=messages_limit,
     )
 
     previous_messages = reversed(

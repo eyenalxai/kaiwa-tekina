@@ -8,7 +8,6 @@ from app.model.models import UserModel
 from app.model.schema.open_ai import ChatCompletion, ChatGPTMessage, Role
 from app.util.messages import get_previous_messages
 from app.util.open_ai.send_request import send_openai_request
-from app.util.settings import shared_settings
 
 
 def first_choice(chat_completion: ChatCompletion) -> ChatGPTMessage:
@@ -18,10 +17,11 @@ def first_choice(chat_completion: ChatCompletion) -> ChatGPTMessage:
 def token_reducer(
     messages: list[ChatGPTMessage],
     tokenizer: Encoding,
+    max_prompt_tokens: int,
 ) -> list[ChatGPTMessage]:
     total_tokens = sum(len(tokenizer.encode(message.content)) for message in messages)
 
-    while total_tokens > shared_settings.max_prompt_tokens:
+    while total_tokens > max_prompt_tokens:
         messages.pop(0)
         total_tokens = sum(
             len(tokenizer.encode(message.content)) for message in messages
@@ -39,12 +39,14 @@ def get_token_count_and_message(
     )
 
 
-def chat_gpt_wrapper() -> Callable[[list[ChatGPTMessage]], tuple[int, ChatGPTMessage]]:
-    url = shared_settings.openai_chat_api_url
+def chat_gpt_wrapper(
+    openai_chat_api_url: str,
+    openai_token: str,
+) -> Callable[[list[ChatGPTMessage]], tuple[int, ChatGPTMessage]]:
     headers = {
         "Content-Type": "application/json",
         "Authorization": "Bearer {openai_token}".format(
-            openai_token=shared_settings.openai_token,
+            openai_token=openai_token,
         ),
     }
 
@@ -52,7 +54,7 @@ def chat_gpt_wrapper() -> Callable[[list[ChatGPTMessage]], tuple[int, ChatGPTMes
         messages: list[ChatGPTMessage],
     ) -> tuple[int, ChatGPTMessage]:
         response = send_openai_request(
-            url=url,
+            url=openai_chat_api_url,
             headers=headers,
             messages=messages,
         )
@@ -68,6 +70,7 @@ def build_prompt(
     previous_messages: list[ChatGPTMessage],
     user_prompt: str,
     tokenizer: Encoding,
+    max_prompt_tokens: int,
 ) -> list[ChatGPTMessage]:
     combined = [
         *previous_messages,
@@ -80,6 +83,7 @@ def build_prompt(
     return token_reducer(
         messages=combined,
         tokenizer=tokenizer,
+        max_prompt_tokens=max_prompt_tokens,
     )
 
 
@@ -89,18 +93,22 @@ async def respond_to_chat_message(  # noqa: WPS211 Found too many arguments
     tokenizer: Encoding,
     user: UserModel,
     chat_prompt: Callable[[list[ChatGPTMessage]], tuple[int, ChatGPTMessage]],
+    max_prompt_tokens: int,
     message_text: str,
+    messages_limit: int,
 ) -> tuple[int, ChatGPTMessage]:
     previous_messages = await get_previous_messages(
         async_session=async_session,
         fernet=fernet,
         user=user,
+        messages_limit=messages_limit,
     )
 
     prompt = build_prompt(
         previous_messages=previous_messages,
         tokenizer=tokenizer,
         user_prompt=message_text,
+        max_prompt_tokens=max_prompt_tokens,
     )
 
     return chat_prompt(prompt)

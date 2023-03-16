@@ -3,12 +3,14 @@ from aiogram.filters import Command
 from aiogram.types import Message
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.model.models import UserModel
 from app.model.schema.user import User, UserUsage
 from app.util.money import tokens_to_usd
 from app.util.query.user import (
     get_users_with_most_tokens_used,
     toggle_allowed_user_by_telegram_id,
 )
+from app.util.settings import SharedSettings
 from app.util.stuff import parse_telegram_id, username_or_full_name
 
 management_router = Router(name="management router")
@@ -43,26 +45,43 @@ async def command_toggle_handler(
     )
 
 
+def create_user_usage(
+    user_model: UserModel,
+    tokens_used: int,
+    per_token_price: float,
+) -> UserUsage:
+    return UserUsage(
+        user=User(
+            telegram_id=user_model.telegram_id,
+            username=user_model.username,
+            full_name=user_model.full_name,
+        ),
+        money_spent=tokens_to_usd(
+            tokens=tokens_used,
+            per_token_price=per_token_price,
+        ),
+    )
+
+
 @management_router.message(Command("list"))
 async def command_list_handler(
     message: Message,
     async_session: AsyncSession,
+    settings: SharedSettings,
 ) -> None:
     user_models = await get_users_with_most_tokens_used(
         async_session=async_session,
         limit=10,
     )
+
     users = [
-        UserUsage(
-            user=User(
-                telegram_id=user_model.telegram_id,
-                username=user_model.username,
-                full_name=user_model.full_name,
-            ),
-            money=tokens_to_usd(tokens=tokens_used),
+        create_user_usage(
+            user_model=user_model,
+            tokens_used=t_used,
+            per_token_price=settings.per_token_price,
         )
-        for user_model, tokens_used in user_models
-        if tokens_to_usd(tokens=tokens_used) > 0
+        for user_model, t_used in user_models
+        if tokens_to_usd(tokens=t_used, per_token_price=settings.per_token_price) > 0
     ]
 
     if not users:
@@ -76,7 +95,7 @@ async def command_list_handler(
             "<code>${money}</code> — {username} ({id})".format(
                 id=user_usage.user.telegram_id,
                 username=username_or_full_name(user=user_usage.user),
-                money=user_usage.money,
+                money=user_usage.money_spent,
             )
             for user_usage in users
         ),

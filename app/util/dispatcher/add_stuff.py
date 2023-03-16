@@ -38,9 +38,13 @@ def add_stuff(dispatcher: Dispatcher) -> Dispatcher:
         pool_pre_ping=True,
     )
 
-    dispatcher["chat_prompt"] = chat_gpt_wrapper()
+    dispatcher["chat_prompt"] = chat_gpt_wrapper(
+        openai_chat_api_url=shared_settings.openai_chat_api_url,
+        openai_token=shared_settings.openai_token,
+    )
     dispatcher["fernet"] = initialize_fernet(key=shared_settings.fernet_key_bytes)
     dispatcher["tokenizer"] = encoding_for_model("gpt-3.5-turbo")
+    dispatcher["settings"] = shared_settings
 
     return dispatcher
 

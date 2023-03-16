@@ -5,7 +5,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.model.models import MessageModel, UserModel
 from app.model.schema.open_ai import Role
-from app.util.settings import shared_settings
 
 
 async def save_message(
@@ -28,12 +27,13 @@ async def save_message(
 async def get_last_messages_by_user(
     async_session: AsyncSession,
     user: UserModel,
+    messages_limit: int,
 ) -> Sequence[MessageModel]:
     query = (
         select(MessageModel)
         .where(MessageModel.user == user)
         .order_by(MessageModel.id.desc())
-        .limit(shared_settings.messages_limit)
+        .limit(messages_limit)
     )
 
     result = await async_session.execute(query)

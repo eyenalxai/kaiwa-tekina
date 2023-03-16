@@ -12,4 +12,4 @@ class User(Immutable):
 
 class UserUsage(Immutable):
     user: User
-    money: float
+    money_spent: float

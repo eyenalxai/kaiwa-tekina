@@ -4,7 +4,7 @@ from typing import Any
 from aiogram.types import Message, TelegramObject
 from aiogram.types import User as TelegramUser
 
-from app.util.settings import shared_settings
+from app.util.settings import SharedSettings
 
 
 async def filter_non_admin(
@@ -17,7 +17,9 @@ async def filter_non_admin(
 
     telegram_user: TelegramUser = data["telegram_user"]
 
-    if telegram_user.id not in shared_settings.admin_user_ids:
+    settings: SharedSettings = data["settings"]
+
+    if telegram_user.id not in settings.admin_user_ids:
         return await message.answer("You are not allowed")
 
     return await handler(message, data)
