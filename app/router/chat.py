@@ -12,7 +12,6 @@ from app.config.log import logger
 from app.model.models import UserModel
 from app.model.schema.open_ai import ChatGPTMessage
 from app.util.display.html import markdown_to_html
-from app.util.messages import save_messages
 from app.util.open_ai.chat_gpt import respond_to_chat_message
 from app.util.open_ai.send_request import OpenAIError
 from app.util.placeholder import get_placeholder
@@ -52,7 +51,7 @@ async def text_handler(  # noqa: WPS211, WPS217
     sent_message = await message.answer(text=get_placeholder(language=language))
 
     try:
-        tokens_used, answer = await respond_to_chat_message(
+        answer = await respond_to_chat_message(
             async_session=async_session,
             fernet=fernet,
             tokenizer=tokenizer,
@@ -67,15 +66,6 @@ async def text_handler(  # noqa: WPS211, WPS217
             message=message,
             error_message=open_ai_error.message,
         )
-
-    await save_messages(
-        async_session=async_session,
-        message_text=message_text,
-        user=user,
-        fernet=fernet,
-        answer=answer,
-        tokens_used=tokens_used,
-    )
 
     try:
         await sent_message.delete()

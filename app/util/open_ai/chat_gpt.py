@@ -6,7 +6,7 @@ from tiktoken import Encoding
 
 from app.model.models import UserModel
 from app.model.schema.open_ai import ChatCompletion, ChatGPTMessage, Role
-from app.util.messages import get_previous_messages
+from app.util.messages import get_previous_messages, save_messages
 from app.util.open_ai.send_request import send_openai_request
 
 
@@ -96,7 +96,7 @@ async def respond_to_chat_message(  # noqa: WPS211 Found too many arguments
     max_prompt_tokens: int,
     message_text: str,
     messages_limit: int,
-) -> tuple[int, ChatGPTMessage]:
+) -> ChatGPTMessage:
     previous_messages = await get_previous_messages(
         async_session=async_session,
         fernet=fernet,
@@ -111,4 +111,15 @@ async def respond_to_chat_message(  # noqa: WPS211 Found too many arguments
         max_prompt_tokens=max_prompt_tokens,
     )
 
-    return chat_prompt(prompt)
+    tokens_used, answer = chat_prompt(prompt)
+
+    await save_messages(
+        async_session=async_session,
+        message_text=message_text,
+        user=user,
+        fernet=fernet,
+        answer=answer,
+        tokens_used=tokens_used,
+    )
+
+    return answer
