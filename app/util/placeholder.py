@@ -126,7 +126,7 @@ def random_russian_placeholder() -> str:
     return choice(seq=placeholders_ru)
 
 
-def get_placeholder(language: Language | None) -> str:
+def get_placeholder(*, language: Language | None) -> str:
     if language == Language.RUSSIAN:
         return random_russian_placeholder()
 

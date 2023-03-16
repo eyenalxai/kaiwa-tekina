@@ -6,12 +6,13 @@ from app.model.schema.open_ai import ChatGPTMessage
 
 
 class OpenAIError(Exception):
-    def __init__(self, message: str) -> None:
+    def __init__(self, *, message: str) -> None:
         super().__init__(message)
         self.message = message
 
 
 def send_openai_request(
+    *,
     url: str,
     headers: dict[str, str],
     messages: list[ChatGPTMessage],

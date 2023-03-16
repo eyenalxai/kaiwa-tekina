@@ -7,6 +7,7 @@ from app.util.query.message import get_last_messages_by_user, save_message
 
 
 async def get_previous_messages(
+    *,
     async_session: AsyncSession,
     fernet: Fernet,
     user: UserModel,
@@ -32,6 +33,7 @@ async def get_previous_messages(
 
 
 async def save_messages(  # noqa:  WPS211 Found too many arguments: 6 > 5
+    *,
     async_session: AsyncSession,
     message_text: str,
     user: UserModel,

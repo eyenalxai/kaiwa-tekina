@@ -14,7 +14,7 @@ from app.util.open_ai.chat_gpt import chat_gpt_wrapper
 from app.util.settings import shared_settings
 
 
-def add_routes(dispatcher: Dispatcher) -> Dispatcher:
+def add_routes(*, dispatcher: Dispatcher) -> Dispatcher:
     dispatcher.include_router(management_router)
     dispatcher.include_router(start_router)
     dispatcher.include_router(chat_router)
@@ -22,7 +22,7 @@ def add_routes(dispatcher: Dispatcher) -> Dispatcher:
     return dispatcher
 
 
-def add_message_middleware(dispatcher: Dispatcher) -> Dispatcher:
+def add_message_middleware(*, dispatcher: Dispatcher) -> Dispatcher:
     dispatcher.message.middleware(filter_non_user)
     dispatcher.message.middleware(filter_non_text)
     dispatcher.message.middleware(get_async_database_session)
@@ -31,7 +31,7 @@ def add_message_middleware(dispatcher: Dispatcher) -> Dispatcher:
     return dispatcher
 
 
-def add_stuff(dispatcher: Dispatcher) -> Dispatcher:
+def add_stuff(*, dispatcher: Dispatcher) -> Dispatcher:
     dispatcher["async_engine"] = create_async_engine(
         url=shared_settings.async_database_url,
         pool_size=shared_settings.database_pool_size,
@@ -49,7 +49,7 @@ def add_stuff(dispatcher: Dispatcher) -> Dispatcher:
     return dispatcher
 
 
-def add_language_detection(dispatcher: Dispatcher) -> Dispatcher:
+def add_language_detection(*, dispatcher: Dispatcher) -> Dispatcher:
     dispatcher["language_detector"] = LanguageDetectorBuilder.from_languages(
         Language.ENGLISH,
         Language.RUSSIAN,

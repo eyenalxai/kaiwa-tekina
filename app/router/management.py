@@ -46,6 +46,7 @@ async def command_toggle_handler(
 
 
 def create_user_usage(
+    *,
     user_model: UserModel,
     tokens_used: int,
     per_token_price: float,

@@ -6,7 +6,7 @@ from app.util.health_check import health_check_endpoint
 from app.util.settings import shared_settings
 
 
-def start_bot(dispatcher: Dispatcher, bot: Bot) -> None:
+def start_bot(*, dispatcher: Dispatcher, bot: Bot) -> None:
     if shared_settings.poll_type == "WEBHOOK":
         app = web.Application()
         SimpleRequestHandler(dispatcher=dispatcher, bot=bot).register(

@@ -1,7 +1,7 @@
 from app.model.schema.user import User
 
 
-def parse_telegram_id(message_text: str) -> int:
+def parse_telegram_id(*, message_text: str) -> int:
     parts = message_text.split()
 
     if len(parts) != 2:
@@ -10,7 +10,7 @@ def parse_telegram_id(message_text: str) -> int:
     return int(parts[1])
 
 
-def username_or_full_name(user: User) -> str:
+def username_or_full_name(*, user: User) -> str:
     if user.username:
         return "@{username}".format(username=user.username)
 
@@ -20,7 +20,7 @@ def username_or_full_name(user: User) -> str:
     return str(user.telegram_id)
 
 
-def split_text_into_parts(text: str) -> list[str]:
+def split_text_into_parts(*, text: str) -> list[str]:
     telegram_limit = 4096
     return [
         text[idx : idx + telegram_limit]  # noqa: E203 whitespace before ':'

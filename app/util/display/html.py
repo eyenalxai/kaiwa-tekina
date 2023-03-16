@@ -22,7 +22,7 @@ def remove_tag(text: str, tag: str) -> str:
     )
 
 
-def remove_tags(text: str, tags_to_remove: list[str]) -> str:
+def remove_tags(*, text: str, tags_to_remove: list[str]) -> str:
     return reduce(remove_tag, tags_to_remove, text)
 
 
@@ -40,7 +40,7 @@ def replace_header_tags(text: str, header_tags: list[str]) -> str:
     return reduce(replace_header_tag, header_tags, text)
 
 
-def markdown_to_html(text: str) -> str:
+def markdown_to_html(*, text: str) -> str:
     html = markdown(text, extensions=["fenced_code"])
     header_tags, tags_to_remove = get_html_tags()
 

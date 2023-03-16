@@ -88,6 +88,7 @@ def build_prompt(
 
 
 async def respond_to_chat_message(  # noqa: WPS211 Found too many arguments
+    *,
     async_session: AsyncSession,
     fernet: Fernet,
     tokenizer: Encoding,

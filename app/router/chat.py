@@ -21,7 +21,7 @@ from app.util.stuff import split_text_into_parts
 chat_router = Router(name="chat router")
 
 
-async def send_error_message(message: Message, error_message: str) -> None:
+async def send_error_message(*, message: Message, error_message: str) -> None:
     await message.reply(
         text="\n\n".join(
             [
