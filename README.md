@@ -42,7 +42,7 @@ To apply the migrations, you can use the `alembic upgrade` command:
 DATABASE_URL=<database_url> alembic upgrade head
 ```
 
-This will apply all of the pending migrations to the database.
+This will apply all the pending migrations to the database.
 
 Note that you will need to include the `DATABASE_URL` environment variable when running Alembic commands, just like you do when running the main application container.
 
