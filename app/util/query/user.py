@@ -1,6 +1,5 @@
 from collections.abc import Sequence
 
-from aiogram.types import User as TelegramUser
 from sqlalchemy import func, select, true
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
@@ -21,9 +20,11 @@ async def get_user_by_telegram_id(
 
 async def save_or_update_user(
     async_session: AsyncSession,
-    telegram_user: TelegramUser,
+    telegram_id: int,
+    username: str | None,
+    full_name: str | None,
 ) -> UserModel:
-    query = select(UserModel).where(UserModel.telegram_id == telegram_user.id)
+    query = select(UserModel).where(UserModel.telegram_id == telegram_id)
 
     user_result = await async_session.execute(query)
 
@@ -31,16 +32,16 @@ async def save_or_update_user(
 
     if not user:
         user = UserModel(
-            telegram_id=telegram_user.id,
-            username=telegram_user.username,
-            full_name=telegram_user.full_name,
+            telegram_id=telegram_id,
+            username=username,
+            full_name=full_name,
             is_allowed=False,
         )
         async_session.add(user)
         return user
 
-    user.username = telegram_user.username
-    user.full_name = telegram_user.full_name
+    user.username = username
+    user.full_name = full_name
 
     return user
 

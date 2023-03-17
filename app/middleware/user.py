@@ -39,7 +39,9 @@ async def update_user(
 
     await save_or_update_user(
         async_session=async_session,
-        telegram_user=telegram_user,
+        telegram_id=telegram_user.id,
+        username=telegram_user.username,
+        full_name=telegram_user.full_name,
     )
 
     return await handler(message, data)
