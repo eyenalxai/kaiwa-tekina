@@ -12,7 +12,7 @@ def main() -> None:
     scheduler.add_job(
         func=prune_messages_task,
         trigger="cron",
-        minute="*0",
+        minute="0",
         hour="*",
         day="*",
     )
