@@ -13,7 +13,7 @@ def main() -> None:
         func=prune_messages_task,
         trigger="cron",
         minute="*/5",
-        hour="0",
+        hour="*",
         day="*",
     )
 
