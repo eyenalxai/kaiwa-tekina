@@ -47,8 +47,10 @@ class MessageModel(Base):
         server_default=func.now(),
     )
 
-    # WPS432 Found magic number: 4096
-    content: Mapped[bytes] = mapped_column(LargeBinary)  # noqa: WPS432
+    content: Mapped[bytes | None] = mapped_column(
+        LargeBinary,
+        nullable=True,
+    )
     role: Mapped[Role] = mapped_column(EnumType(Role, name="role"))
 
     tokens_used: Mapped[int | None] = mapped_column(Integer(), nullable=True)
