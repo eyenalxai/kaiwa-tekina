@@ -1,6 +1,7 @@
 from collections.abc import Sequence
+from datetime import datetime, timedelta
 
-from sqlalchemy import select
+from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.model.models import MessageModel, UserModel
@@ -39,3 +40,21 @@ async def get_last_messages_by_user(
     result = await async_session.execute(query)
 
     return result.scalars().all()
+
+
+async def delete_messages_for_user_older_than_days(
+    async_session: AsyncSession,
+    user: UserModel,
+    older_than_days: int,
+) -> int:
+    query = (
+        delete(MessageModel)
+        .where(MessageModel.user == user)
+        .where(
+            MessageModel.created_at < datetime.now() - timedelta(days=older_than_days),
+        )
+    )
+
+    result = await async_session.execute(query)
+
+    return result.rowcount  # type: ignore

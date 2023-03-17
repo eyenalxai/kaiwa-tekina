@@ -1,4 +1,4 @@
-exclude: ^(.migrations/|alembic/)
+exclude: ^(migrations/|alembic/)
 repos:
   - repo: local
     hooks:

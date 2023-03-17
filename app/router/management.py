@@ -10,7 +10,7 @@ from app.util.query.user import (
     get_users_with_most_tokens_used,
     toggle_allowed_user_by_telegram_id,
 )
-from app.util.settings import SharedSettings
+from app.util.settings.bot import BotSettings
 from app.util.stuff import parse_telegram_id, username_or_full_name
 
 management_router = Router(name="management router")
@@ -65,30 +65,29 @@ def create_user_usage(
 
 
 @management_router.message(Command("list"))
-async def command_list_handler(
+async def command_list_handler(  # noqa: WPS210 Found too many local variables
     message: Message,
     async_session: AsyncSession,
-    settings: SharedSettings,
+    bot_settings: BotSettings,
 ) -> None:
     user_models = await get_users_with_most_tokens_used(
         async_session=async_session,
         limit=10,
     )
 
+    per_token_price = bot_settings.per_token_price
     users = [
         create_user_usage(
             user_model=user_model,
-            tokens_used=t_used,
-            per_token_price=settings.per_token_price,
+            tokens_used=tokens_used,
+            per_token_price=per_token_price,
         )
-        for user_model, t_used in user_models
-        if tokens_to_usd(tokens=t_used, per_token_price=settings.per_token_price) > 0
+        for user_model, tokens_used in user_models
+        if tokens_to_usd(tokens=tokens_used, per_token_price=per_token_price) > 0
     ]
 
     if not users:
-        await message.reply(
-            text="No users found that spent more than $0",
-        )
+        await message.reply(text="No users found that spent more than $0")
         return
 
     message_text = "Top 10 users by tokens used:\n\n{users_list}".format(

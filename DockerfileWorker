@@ -1,0 +1,20 @@
+FROM python:slim
+
+ENV PYTHONUNBUFFERED 1
+ENV PYTHONOPTIMIZE 1
+
+RUN pip install pdm
+
+WORKDIR /code
+
+COPY ./pyproject.toml /code/pyproject.toml
+COPY ./pdm.lock /code/pdm.lock
+RUN pdm install --group worker
+
+COPY ./app /code/app
+COPY worker.py /code/worker.py
+
+ENV DATABASE_URL ${DATABASE_URL}
+ENV PRUNE_OLDER_THAN_DAYS ${PRUNE_OLDER_THAN_DAYS}
+
+CMD ["pdm", "run", "start_worker"]

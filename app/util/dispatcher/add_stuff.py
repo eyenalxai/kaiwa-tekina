@@ -11,7 +11,8 @@ from app.router.management import management_router
 from app.router.start import start_router
 from app.util.crypto.initialize import initialize_fernet
 from app.util.open_ai.chat_gpt import chat_gpt_wrapper
-from app.util.settings import shared_settings
+from app.util.settings.bot import bot_settings
+from app.util.settings.shared import shared_settings
 
 
 def add_routes(*, dispatcher: Dispatcher) -> Dispatcher:
@@ -39,12 +40,12 @@ def add_stuff(*, dispatcher: Dispatcher) -> Dispatcher:
     )
 
     dispatcher["chat_prompt"] = chat_gpt_wrapper(
-        openai_chat_api_url=shared_settings.openai_chat_api_url,
-        openai_token=shared_settings.openai_token,
+        openai_chat_api_url=bot_settings.openai_chat_api_url,
+        openai_token=bot_settings.openai_token,
     )
-    dispatcher["fernet"] = initialize_fernet(key=shared_settings.fernet_key_bytes)
+    dispatcher["fernet"] = initialize_fernet(key=bot_settings.fernet_key_bytes)
     dispatcher["tokenizer"] = encoding_for_model("gpt-3.5-turbo")
-    dispatcher["settings"] = shared_settings
+    dispatcher["bot_settings"] = bot_settings
 
     return dispatcher
 

@@ -15,7 +15,7 @@ from app.util.display.html import markdown_to_html
 from app.util.open_ai.chat_gpt import respond_to_chat_message
 from app.util.open_ai.send_request import OpenAIError
 from app.util.placeholder import get_placeholder
-from app.util.settings import SharedSettings
+from app.util.settings.bot import BotSettings
 from app.util.stuff import split_text_into_parts
 
 chat_router = Router(name="chat router")
@@ -42,7 +42,7 @@ async def text_handler(  # noqa: WPS211, WPS217
     async_session: AsyncSession,
     fernet: Fernet,
     tokenizer: Encoding,
-    settings: SharedSettings,
+    bot_settings: BotSettings,
     language: Language | None,
     user: UserModel,
     chat_prompt: Callable[[list[ChatGPTMessage]], tuple[int, ChatGPTMessage]],
@@ -58,8 +58,8 @@ async def text_handler(  # noqa: WPS211, WPS217
             user=user,
             chat_prompt=chat_prompt,
             message_text=message_text,
-            max_prompt_tokens=settings.max_prompt_tokens,
-            messages_limit=settings.messages_limit,
+            max_prompt_tokens=bot_settings.max_prompt_tokens,
+            messages_limit=bot_settings.messages_limit,
         )
     except OpenAIError as open_ai_error:
         return await send_error_message(
