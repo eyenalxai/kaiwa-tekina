@@ -4,6 +4,7 @@ from aiogram import Router
 from aiogram.exceptions import TelegramBadRequest
 from aiogram.types import Message
 from cryptography.fernet import Fernet
+from httpx import ReadTimeout
 from lingua import Language
 from sqlalchemy.ext.asyncio import AsyncSession
 from tiktoken import Encoding
@@ -62,9 +63,16 @@ async def text_handler(  # noqa: WPS211, WPS217
             messages_limit=bot_settings.messages_limit,
         )
     except OpenAIError as open_ai_error:
+        await sent_message.delete()
         return await send_error_message(
             message=message,
             error_message=open_ai_error.message,
+        )
+    except ReadTimeout:
+        await sent_message.delete()
+        return await send_error_message(
+            message=message,
+            error_message="OpenAI API is not responding, please try again later.",
         )
 
     try:

@@ -23,7 +23,8 @@ async def get_previous_messages(
         [
             ChatGPTMessage(
                 role=message.role,
-                content=fernet.decrypt(message.content).decode(),
+                # Because we're querying messages with content not null
+                content=fernet.decrypt(message.content).decode(),  # type: ignore
             )
             for message in previous_messages_models
         ],
