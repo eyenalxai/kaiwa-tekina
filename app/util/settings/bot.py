@@ -1,3 +1,5 @@
+from random import choice
+from string import ascii_letters
 from typing import Literal
 
 from pydantic import BaseSettings, Field
@@ -27,9 +29,11 @@ class BotSettings(BaseSettings):
 
     @property
     def webhook_url(self: "BotSettings") -> str:
-        return "https://{domain}{main_bot_path}".format(
+        random_string = "".join(choice(ascii_letters) for _ in range(10))
+        return "{domain}{main_bot_path}/{random_string}".format(
             domain=self.domain,
             main_bot_path=self.main_bot_path,
+            random_string=random_string,
         )
 
     @property
