@@ -1,5 +1,3 @@
-from random import choice
-from string import ascii_letters
 from typing import Literal
 
 from pydantic import BaseSettings, Field
@@ -12,7 +10,7 @@ class BotSettings(BaseSettings):
     port: int = Field(..., env="PORT")
     domain: str = Field(..., env="DOMAIN")
     host: str = Field(env="HOST", default="0.0.0.0")
-    main_bot_path: str = "/webhook/main"
+    main_bot_path: str = "/webhook/main/kaiwa-tekina"
 
     openai_token: str = Field(..., env="OPENAI_TOKEN")
     openai_chat_api_url = "https://api.openai.com/v1/chat/completions"
@@ -29,11 +27,9 @@ class BotSettings(BaseSettings):
 
     @property
     def webhook_url(self: "BotSettings") -> str:
-        random_string = "".join(choice(ascii_letters) for _ in range(10))
-        return "{domain}{main_bot_path}/{random_string}".format(
+        return "{domain}{main_bot_path}".format(
             domain=self.domain,
             main_bot_path=self.main_bot_path,
-            random_string=random_string,
         )
 
     @property
